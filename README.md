@@ -6,7 +6,7 @@ To run the coce:
 
 2) Run minecraft client
 
-3) 
+3) Run the project code
 
 On Windows: 
 python st.py
