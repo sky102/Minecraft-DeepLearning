@@ -11,3 +11,6 @@ Milestone 1-To run the coce:
 On Windows: 
 python st.py
 
+On Macs:
+python3 st.py
+
