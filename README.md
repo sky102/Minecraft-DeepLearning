@@ -9,8 +9,8 @@ Milestone 1-To run the coce:
 3) Run the project code
 
 On Windows: 
-python st.py
+python st3.py
 
 On Macs:
-python3 st.py
+python3 st3.py
 
