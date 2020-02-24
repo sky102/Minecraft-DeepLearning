@@ -178,7 +178,7 @@ class TabQAgent(object):
         total_reward += self.act(world_state,agent_host,current_r)
         
         require_move = True
-        check_expected_position = True
+        check_expected_position = False
         
         # main loop:
         while world_state.is_mission_running:
@@ -197,6 +197,9 @@ class TabQAgent(object):
                     if require_move:
                         if math.hypot( curr_x - prev_x, curr_z - prev_z ) > tol:
                             print('received.')
+                            break
+                        else:
+                            print('same location received.')
                             break
                     else:
                         print('received.')
