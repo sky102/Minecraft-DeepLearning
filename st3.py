@@ -70,6 +70,11 @@ class TabQAgent(object):
 
         self.actions = actions
         self.q_table = {}
+        
+        # For drawing q-table:
+        self.q_table_draw = {}
+        
+        
         self.canvas = canvas
         self.root = root
         
@@ -100,15 +105,28 @@ class TabQAgent(object):
             self.logger.error("Incomplete observation received: %s" % obs_text)
             return 0
         current_s = "%d:%d:%s:%s:%s:%s" % (int(obs[u'XPos']), int(obs[u'ZPos']), grid[1], grid[3], grid[5], grid[7])
+        
+        # For drawing q-table:
+        current_s_draw = "%d:%d" % (int(obs[u'XPos']), int(obs[u'ZPos']))
+        
+        
         self.logger.debug("State: %s (x = %.2f, z = %.2f)" % (current_s, float(obs[u'XPos']), float(obs[u'ZPos'])))
         if current_s not in self.q_table:
             self.q_table[current_s] = ([0] * len(self.actions))
+            
+        # For drawing q-table:
+        if current_s_draw not in self.q_table_draw:
+            self.q_table_draw[current_s_draw] = ([0] * len(self.actions))
 
         # update Q values
         if self.training and self.prev_s is not None and self.prev_a is not None:
             old_q = self.q_table[self.prev_s][self.prev_a]
             self.q_table[self.prev_s][self.prev_a] = old_q + self.alpha * (current_r
                 + self.gamma * max(self.q_table[current_s]) - old_q)
+                
+        # update Q values for drawing q-table
+        
+
 
         self.drawQ( curr_x = int(obs[u'XPos']), curr_y = int(obs[u'ZPos']) )
 
