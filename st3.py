@@ -132,11 +132,6 @@ class TabQAgent(object):
             
             with open('data.txt', 'w') as outfile:
                 json.dump(self.q_table, outfile)
-                
-
-                
-        
-        
 
 
         self.drawQ( curr_x = int(obs[u'XPos']), curr_y = int(obs[u'ZPos']) )
@@ -356,7 +351,7 @@ agent_host = MalmoPython.AgentHost()
 #     exit(1)
 
 # Find the mission in the current folder:
-mission_file = './cliff_walking_1b.xml'
+mission_file = './cliff_walking_1c.xml'
 
 # add some args
 # agent_host.addOptionalStringArgument('mission_file',
@@ -412,10 +407,10 @@ for imap in range(num_maps):
     my_mission.requestVideo( 320, 240 )
     my_mission.setViewpoint( 1 )
     
-    # # add holes for interest
+    # add holes for interest
     # for z in range(2,12,2):
     #     x = random.randint(1,3)
-    #     my_mission.drawBlock( x,45,z,"lava")
+    #     my_mission.drawBlock(x,45,z,"lava")
 
     my_clients = MalmoPython.ClientPool()
     my_clients.add(MalmoPython.ClientInfo('127.0.0.1', 10000)) # add Minecraft machines here as available
