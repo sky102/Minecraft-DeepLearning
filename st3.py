@@ -94,11 +94,12 @@ class TabQAgent(object):
         
         obs_text = world_state.observations[-1].text
         obs = json.loads(obs_text) # most recent observation
+        grid = obs.get(u'space3x3',0)
         self.logger.debug(obs)
         if not u'XPos' in obs or not u'ZPos' in obs:
             self.logger.error("Incomplete observation received: %s" % obs_text)
             return 0
-        current_s = "%d:%d" % (int(obs[u'XPos']), int(obs[u'ZPos']))
+        current_s = "%d:%d:%s:%s:%s:%s" % (int(obs[u'XPos']), int(obs[u'ZPos']), grid[1], grid[3], grid[5], grid[7])
         self.logger.debug("State: %s (x = %.2f, z = %.2f)" % (current_s, float(obs[u'XPos']), float(obs[u'ZPos'])))
         if current_s not in self.q_table:
             self.q_table[current_s] = ([0] * len(self.actions))
@@ -288,6 +289,7 @@ class TabQAgent(object):
                 for action in range(4):
                     if not s in self.q_table:
                         continue
+                        
                     value = self.q_table[s][action]
                     color = int( 255 * ( value - min_value ) / ( max_value - min_value )) # map value to 0-255
                     color = max( min( color, 255 ), 0 ) # ensure within [0,255]
@@ -325,7 +327,7 @@ agent_host = MalmoPython.AgentHost()
 #     exit(1)
 
 # Find the mission in the current folder:
-mission_file = './cliff_walking_1a.xml'
+mission_file = './cliff_walking_1b.xml'
 
 # add some args
 # agent_host.addOptionalStringArgument('mission_file',
