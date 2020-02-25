@@ -123,8 +123,14 @@ class TabQAgent(object):
             old_q = self.q_table[self.prev_s][self.prev_a]
             self.q_table[self.prev_s][self.prev_a] = old_q + self.alpha * (current_r
                 + self.gamma * max(self.q_table[current_s]) - old_q)
+            
+            with open('data.txt', 'w') as outfile:
+                json.dump(self.q_table, outfile)
                 
-        # update Q values for drawing q-table
+            # update Q values for drawing q-table
+            #self.q_table_draw[self.prev_s[0:1]][self.prev_a] = self.q_table[self.prev_s][self.prev_a]
+                
+        
         
 
 
