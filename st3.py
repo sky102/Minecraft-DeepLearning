@@ -24,6 +24,9 @@ from __future__ import print_function
 # Reinforcement Learning, An Introduction
 # MIT Press, 1998
 
+# CS175 Project
+# Last Updated: 02/24/2020 7:52 pm
+
 from future import standard_library
 standard_library.install_aliases()
 from builtins import input
@@ -123,12 +126,14 @@ class TabQAgent(object):
             old_q = self.q_table[self.prev_s][self.prev_a]
             self.q_table[self.prev_s][self.prev_a] = old_q + self.alpha * (current_r
                 + self.gamma * max(self.q_table[current_s]) - old_q)
+
+            # update Q values for drawing q-table
+            # self.q_table_draw[self.prev_s][self.prev_a] = self.q_table[self.prev_s][self.prev_a]
             
             with open('data.txt', 'w') as outfile:
                 json.dump(self.q_table, outfile)
                 
-            # update Q values for drawing q-table
-            #self.q_table_draw[self.prev_s[0:1]][self.prev_a] = self.q_table[self.prev_s][self.prev_a]
+
                 
         
         
@@ -421,6 +426,11 @@ for imap in range(num_maps):
 
     num_repeats = 150
     cumulative_rewards = []
+
+    # Trying to load existing q-table.
+    # with open('data.txt') as qFile:
+    agent.loadModel('data.txt')
+
     for i in range(num_repeats):
         
         print("\nMap %d - Mission %d of %d:" % ( imap, i+1, num_repeats ))
