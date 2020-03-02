@@ -24,9 +24,6 @@ from __future__ import print_function
 # Reinforcement Learning, An Introduction
 # MIT Press, 1998
 
-# CS175 Project
-# Last Updated: 02/24/2020 7:52 pm
-
 from future import standard_library
 standard_library.install_aliases()
 from builtins import input
@@ -73,11 +70,6 @@ class TabQAgent(object):
 
         self.actions = actions
         self.q_table = {}
-        
-        # For drawing q-table:
-        self.q_table_draw = {}
-        
-        
         self.canvas = canvas
         self.root = root
         
@@ -102,37 +94,20 @@ class TabQAgent(object):
         
         obs_text = world_state.observations[-1].text
         obs = json.loads(obs_text) # most recent observation
-        grid = obs.get(u'space3x3',0)
         self.logger.debug(obs)
         if not u'XPos' in obs or not u'ZPos' in obs:
             self.logger.error("Incomplete observation received: %s" % obs_text)
             return 0
-        current_s = "%d:%d:%s:%s:%s:%s" % (int(obs[u'XPos']), int(obs[u'ZPos']), grid[1], grid[3], grid[5], grid[7])
-        
-        # For drawing q-table:
-        current_s_draw = "%d:%d" % (int(obs[u'XPos']), int(obs[u'ZPos']))
-        
-        
+        current_s = "%d:%d" % (int(obs[u'XPos']), int(obs[u'ZPos']))
         self.logger.debug("State: %s (x = %.2f, z = %.2f)" % (current_s, float(obs[u'XPos']), float(obs[u'ZPos'])))
         if current_s not in self.q_table:
             self.q_table[current_s] = ([0] * len(self.actions))
-            
-        # For drawing q-table:
-        if current_s_draw not in self.q_table_draw:
-            self.q_table_draw[current_s_draw] = ([0] * len(self.actions))
 
         # update Q values
         if self.training and self.prev_s is not None and self.prev_a is not None:
             old_q = self.q_table[self.prev_s][self.prev_a]
             self.q_table[self.prev_s][self.prev_a] = old_q + self.alpha * (current_r
                 + self.gamma * max(self.q_table[current_s]) - old_q)
-
-            # update Q values for drawing q-table
-            # self.q_table_draw[self.prev_s][self.prev_a] = self.q_table[self.prev_s][self.prev_a]
-            
-            with open('data.txt', 'w') as outfile:
-                json.dump(self.q_table, outfile)
-
 
         self.drawQ( curr_x = int(obs[u'XPos']), curr_y = int(obs[u'ZPos']) )
 
@@ -203,7 +178,7 @@ class TabQAgent(object):
         total_reward += self.act(world_state,agent_host,current_r)
         
         require_move = True
-        check_expected_position = False
+        check_expected_position = True
         
         # main loop:
         while world_state.is_mission_running:
@@ -222,9 +197,6 @@ class TabQAgent(object):
                     if require_move:
                         if math.hypot( curr_x - prev_x, curr_z - prev_z ) > tol:
                             print('received.')
-                            break
-                        else:
-                            print('same location received.')
                             break
                     else:
                         print('received.')
@@ -313,7 +285,6 @@ class TabQAgent(object):
                 for action in range(4):
                     if not s in self.q_table:
                         continue
-                        
                     value = self.q_table[s][action]
                     color = int( 255 * ( value - min_value ) / ( max_value - min_value )) # map value to 0-255
                     color = max( min( color, 255 ), 0 ) # ensure within [0,255]
@@ -335,27 +306,24 @@ class TabQAgent(object):
 agent_host = MalmoPython.AgentHost()
 
 # Find the default mission file by looking next to the schemas folder:
-# schema_dir = None
-# try:
-#     schema_dir = os.environ['MALMO_XSD_PATH']
-# except KeyError:
-#     print("MALMO_XSD_PATH not set? Check environment.")
-#     exit(1)
-# mission_file = os.path.abspath(os.path.join(schema_dir, '..',
-#     'sample_missions', 'cliff_walking_1a.xml')) # Integration test path
-# if not os.path.exists(mission_file):
-#     mission_file = os.path.abspath(os.path.join(schema_dir, '..',
-#         'Sample_missions', 'cliff_walking_1a.xml')) # Install path
-# if not os.path.exists(mission_file):
-#     print("Could not find cliff_walking_1a.xml under MALMO_XSD_PATH")
-#     exit(1)
-
-# Find the mission in the current folder:
-mission_file = './cliff_walking_1b.xml'
+schema_dir = None
+try:
+    schema_dir = os.environ['MALMO_XSD_PATH']
+except KeyError:
+    print("MALMO_XSD_PATH not set? Check environment.")
+    exit(1)
+mission_file = os.path.abspath(os.path.join(schema_dir, '..', 
+    'sample_missions', 'cliff_walking_1.xml')) # Integration test path
+if not os.path.exists(mission_file):
+    mission_file = os.path.abspath(os.path.join(schema_dir, '..', 
+        'Sample_missions', 'cliff_walking_1.xml')) # Install path
+if not os.path.exists(mission_file):
+    print("Could not find cliff_walking_1.xml under MALMO_XSD_PATH")
+    exit(1)
 
 # add some args
-# agent_host.addOptionalStringArgument('mission_file',
-#     'Path/to/file from which to load the mission.', mission_file)
+agent_host.addOptionalStringArgument('mission_file',
+    'Path/to/file from which to load the mission.', mission_file)
 agent_host.addOptionalFloatArgument('alpha',
     'Learning rate of the Q-learning agent.', 0.1)
 agent_host.addOptionalFloatArgument('epsilon',
@@ -397,7 +365,7 @@ for imap in range(num_maps):
         root = root)
 
     # -- set up the mission -- #
-    #mission_file = agent_host.getStringArgument('mission_file')
+    mission_file = agent_host.getStringArgument('mission_file')
     with open(mission_file, 'r') as f:
         print("Loading mission from %s" % mission_file)
         mission_xml = f.read()
@@ -406,11 +374,10 @@ for imap in range(num_maps):
     my_mission.allowAllDiscreteMovementCommands()
     my_mission.requestVideo( 320, 240 )
     my_mission.setViewpoint( 1 )
-    
     # add holes for interest
-    # for z in range(2,12,2):
-    #     x = random.randint(1,3)
-    #     my_mission.drawBlock(x,45,z,"lava")
+    for z in range(2,12,2):
+        x = random.randint(1,3)
+        my_mission.drawBlock( x,45,z,"lava")
 
     my_clients = MalmoPython.ClientPool()
     my_clients.add(MalmoPython.ClientInfo('127.0.0.1', 10000)) # add Minecraft machines here as available
@@ -421,11 +388,6 @@ for imap in range(num_maps):
 
     num_repeats = 150
     cumulative_rewards = []
-
-    # Trying to load existing q-table.
-    # with open('data.txt') as qFile:
-    agent.loadModel('data.txt')
-
     for i in range(num_repeats):
         
         print("\nMap %d - Mission %d of %d:" % ( imap, i+1, num_repeats ))
