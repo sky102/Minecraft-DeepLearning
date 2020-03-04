@@ -432,6 +432,8 @@ if agent_host.receivedArgument("test"):
 else:
     num_maps = 30000
 
+rolling_avg = []
+
 for imap in range(num_maps):
 
     # -- set up the agent -- #
@@ -516,6 +518,11 @@ for imap in range(num_maps):
     print("Cumulative rewards for all %d runs:" % num_repeats)
     print(cumulative_rewards)
 
+    cumulative_reward_avg = sum(cumulative_rewards)/len(cumulative_rewards)
+    rolling_avg += [ (cumulative_reward_avg/(len(rolling_avg)+1)) ]
+
     create_graph(cumulative_rewards, imap)
     print("Done writing to TensorBoard for Map#" + str(imap))
-    
+
+create_graph(rolling_avg, "rolling average")
+print("Done calculating rolling average of cumulative rewards.")
