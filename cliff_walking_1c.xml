@@ -48,7 +48,7 @@
         <DrawBlock   x="1"   y="45"  z="20" type="lapis_block" /><!-- the destination marker -->
         <!--<DrawItem    x="3"   y="46"  z="12" type="diamond" />-->                               <!-- another destination marker -->
       </DrawingDecorator>
-      <ServerQuitFromTimeUp timeLimitMs="1000000"/>
+      <ServerQuitFromTimeUp timeLimitMs="5000000"/>
       <ServerQuitWhenAnyAgentFinishes/>
     </ServerHandlers>
   </ServerSection>
@@ -76,8 +76,8 @@
           </ModifierList>
       </DiscreteMovementCommands>
       <RewardForTouchingBlockType dimension="1">
-        <Block reward="-100.0" type="lava" behaviour="onceOnly"/>
-        <Block reward="100.0" type="lapis_block" behaviour="onceOnly"/>
+        <Block reward="-2000.0" type="lava" behaviour="onceOnly"/>
+        <Block reward="2000.0" type="lapis_block" behaviour="onceOnly"/>
 		<Block reward="-1.0" type="glass" behaviour="onceOnly"/>
       </RewardForTouchingBlockType>
       <RewardForSendingCommand reward="-1"/>
