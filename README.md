@@ -1,7 +1,10 @@
-# cs175code
+# CS 175 Group 5 Website
+https://sgupta-9.github.io/cs175group5/proposal.html
+
+# CS 175 Code
 Source code for CS175 project
 
-Milestone 1-To run the coce:
+Milestone 1-To run the code:
 1) Install malmo
 
 2) Run minecraft client
@@ -13,4 +16,3 @@ python st3.py
 
 On Macs:
 python3 st3.py
-
