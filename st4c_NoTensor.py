@@ -447,7 +447,7 @@ mission_file = './map1c.xml'
 if agent_host.receivedArgument("test"):
     num_maps = 1
 else:
-    num_maps = 30000
+    num_maps = 30
 
 for imap in range(num_maps):
 
