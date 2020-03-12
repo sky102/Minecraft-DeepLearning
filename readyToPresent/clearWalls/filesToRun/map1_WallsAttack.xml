@@ -1,0 +1,94 @@
+<!--Last Updated: 03/12/2020 16:23-->
+<!-- Sky: This map has conditions for processing observations -->
+<!-- This map is adapted to be used in walls attacking-->
+
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <About>
+    <Summary>Cliff walking mission based on Sutton and Barto.</Summary>
+  </About>
+  
+  <ModSettings>
+    <MsPerTick>1</MsPerTick>
+  </ModSettings>
+
+  <ServerSection>
+      <ServerInitialConditions>
+            <Time>
+                <StartTime>6000</StartTime>
+                <AllowPassageOfTime>false</AllowPassageOfTime>
+            </Time>
+            <Weather>clear</Weather>
+            <AllowSpawning>false</AllowSpawning>
+      </ServerInitialConditions>
+    <ServerHandlers>
+      <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1"/>
+      <DrawingDecorator>
+        <!-- coordinates for cuboid are inclusive -->
+        <DrawCuboid x1="-2" y1="46" z1="-2" x2="11" y2="50" z2="26" type="air" />            <!-- limits of our arena -->
+        <DrawCuboid x1="-2" y1="45" z1="-2" x2="11" y2="45" z2="26" type="lava" />           <!-- lava floor -->
+        <DrawCuboid x1="1"  y1="45" z1="1"  x2="8" y2="45" z2="20" type="bedrock" />      <!-- floor of the arena -->
+
+        <!-- Drawing walls around the map -->
+        <DrawCuboid x1="0"  y1="45" z1="1"  x2="0" y2="47" z2="20" type="brick_block" />    <!-- right side wall -->
+        <DrawCuboid x1="0"  y1="45" z1="0"  x2="9" y2="47" z2="0" type="brick_block" />     <!-- bottom wall -->
+        <DrawCuboid x1="9"  y1="45" z1="1"  x2="9" y2="47" z2="20" type="brick_block" />    <!-- left side wall -->
+        <DrawCuboid x1="0"  y1="45" z1="21"  x2="9" y2="47" z2="21" type="brick_block" />     <!-- top wall -->
+
+        <!-- Drawing internal details of the maze -->
+        <DrawCuboid x1="1"  y1="46" z1="4"  x2="6" y2="47" z2="4" type="brick_block" />     <!-- wall 1 -->
+        <DrawCuboid x1="3"  y1="46" z1="9"  x2="8" y2="47" z2="9" type="brick_block" />     <!-- wall 2 -->
+	    <DrawCuboid x1="1"  y1="46" z1="14"  x2="7" y2="47" z2="14" type="brick_block" />     <!-- wall 3 -->
+
+	<!-- <DrawCuboid x1="1"  y1="46" z1="17"  x2="5" y2="47" z2="17" type="glass" /> -->     <!-- wall 3 -->
+
+
+        <DrawBlock   x="1"   y="45"  z="1"  type="cobblestone" />                           <!-- the starting marker -->
+        <DrawBlock   x="1"   y="45"  z="20" type="lapis_block" /><!-- the destination marker -->
+        <!-- <DrawBlock   x="5"   y="45"  z="1" type="lapis_block" /> --> <!-- testing - 2nd destination marker -->
+        <!--<DrawItem    x="3"   y="46"  z="12" type="diamond" />-->                               <!-- another destination marker -->
+      </DrawingDecorator>
+      <ServerQuitFromTimeUp timeLimitMs="9000000"/>
+      <ServerQuitWhenAnyAgentFinishes/>
+    </ServerHandlers>
+  </ServerSection>
+
+  <AgentSection mode="Survival">
+    <Name>Cristina</Name>
+    <AgentStart>
+      <Placement x="3.5" y="46.0" z="1.5" pitch="15" yaw="0"/>
+        <Inventory>
+            <InventoryItem slot="0" type="diamond_pickaxe"/>
+        </Inventory>
+    </AgentStart>
+    <AgentHandlers>
+      <ObservationFromFullStats/>
+	  <ObservationFromGrid>
+			<Grid name="space3x3">
+				<min x="-2" y="-1" z="-2"/>
+				<max x="2" y="-1" z="2"/>
+			</Grid>
+	  </ObservationFromGrid>
+      <VideoProducer want_depth="false">
+          <Width>640</Width>
+          <Height>480</Height>
+      </VideoProducer>
+      <DiscreteMovementCommands>
+          <ModifierList type="deny-list">
+            <command>attack</command>
+          </ModifierList>
+      </DiscreteMovementCommands>
+      <RewardForTouchingBlockType>
+        <Block reward="-2000.0" type="lava" behaviour="onceOnly"/>
+        <Block reward="2000.0" type="lapis_block" behaviour="onceOnly"/>
+      </RewardForTouchingBlockType>
+      <RewardForSendingCommand reward="-1"/>
+      <AgentQuitFromTouchingBlockType>
+          <Block type="lava" />
+          <Block type="lapis_block" />
+      </AgentQuitFromTouchingBlockType>
+    </AgentHandlers>
+  </AgentSection>
+
+</Mission>
