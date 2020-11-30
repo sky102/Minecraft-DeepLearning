@@ -8,10 +8,10 @@ To run the code:
 
 2) Run minecraft client
 
-3) Run the project code
+3) Run the project code in src directory
 
 On Windows: 
-python st3.py
+python runAgent.py
 
 On Macs:
-python3 st3.py
+python3 runAgent.py
