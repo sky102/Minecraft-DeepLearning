@@ -1,10 +1,9 @@
-# CS 175 Group 5 Website
-https://sgupta-9.github.io/cs175group5/proposal.html
+_A Malmo Project for CompSci 175 at UC Irvine_
+# Deep Learning With Minecraft 
+Tabular Q-learning is uitilized to train a Minecraft agent to navigate the environment to reach a destination.
 
-# CS 175 Code
-Source code for CS175 project
-
-Milestone 1-To run the code:
+# Usage
+To run the code:
 1) Install malmo
 
 2) Run minecraft client
