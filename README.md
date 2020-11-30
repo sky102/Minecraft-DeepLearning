@@ -1,6 +1,6 @@
 _A Malmo Project for CompSci 175 at UC Irvine_
 # Deep Learning With Minecraft 
-Tabular Q-learning is uitilized to train a Minecraft agent to navigate the environment to reach a destination.
+Tabular Q-learning is uitilized to train a Minecraft agent to navigate the environment to reach a destination. The agent can avoid randomized traps and destroy walls to reveal the most efficient path to the goal.
 
 # Usage
 To run the code:
